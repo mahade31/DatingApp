@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
@@ -14,6 +14,12 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class MemberEditComponent {
   @ViewChild('editForm') editForm : NgForm | undefined;
+  @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any){
+    if (this.editForm?.dirty){
+      $event.returnValue = true;
+    }
+  }
+  
   member: Member | undefined;
   user: User | null = null;
 
@@ -35,8 +41,11 @@ export class MemberEditComponent {
   }
 
   updateMember() {
-    console.log(this.member);
-    this.toastr.success('Profile updated sucessfully!!');
-    this.editForm?.reset(this.member);
+    this.memberService.updateMember(this.editForm?.value).subscribe({
+      next: _ => {
+        this.toastr.success('Profile updated sucessfully!!');
+        this.editForm?.reset(this.member);
+      }
+    })
   }
 }
