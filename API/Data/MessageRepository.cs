@@ -38,7 +38,7 @@ namespace API.Data
                         .OrderByDescending(m => m.MessageSent)
                         .AsQueryable();
 
-            query = messageParams.Conatiner switch 
+            query = messageParams.Container switch 
             {
                 "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username),
                 "Outbox" => query.Where(u => u.SenderUsername == messageParams.Username),
