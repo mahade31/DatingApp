@@ -46,7 +46,9 @@
                 <ngx-gallery [options]="galleryOptions" [images]="gallerImages" class = "ngx-gallery"></ngx-gallery>
             </tab>
             <tab heading="Messages">
-                <p>Messages will be available soon</p>
+                <app-member-messages
+                    [username]="member.userName">
+                </app-member-messages>
             </tab>
         </tabset>
     </div>
