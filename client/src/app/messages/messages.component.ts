@@ -14,6 +14,7 @@ export class MessagesComponent {
   container = 'Unread';
   pageNumber = 1;
   pageSize = 10;
+  loading = false;
 
   constructor(private messageServive: MessageService) {}
 
@@ -22,10 +23,12 @@ export class MessagesComponent {
   }
 
   loadMessages() {
+    this.loading = true;
     this.messageServive.getMessages(this.pageNumber, this.pageSize, this.container).subscribe({
       next: response => {
         this.messages = response.result;
         this.pagination = response.pagination;
+        this.loading = false;
       }
     })
   }
@@ -35,5 +38,13 @@ export class MessagesComponent {
       this.pageNumber = event.page;
       this.loadMessages();
     }
+  }
+
+  deleteMessage(id: number) {
+    this.messageServive.deleteMessage(id).subscribe({
+      next: () => {
+        this.messages?.splice(this.messages.findIndex(m => m.id === id), 1);
+      }
+    });
   }
 }
