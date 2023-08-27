@@ -22,14 +22,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<MessageDto>> CreateMessage(CreateMessageDto createMessagDto) 
+        public async Task<ActionResult<MessageDto>> CreateMessage(CreateMessageDto createMessageDto) 
         {
             var username = User.GetUsername();
 
-            if (username == createMessagDto.RecipientUsername) return BadRequest("Do you really want to message yourself?");
+            if (username == createMessageDto.RecipientUsername) return BadRequest("Do you really want to message yourself?");
 
             var sender = await _userRepository.GetUserByUsernameAsync(username);
-            var recipient = await _userRepository.GetUserByUsernameAsync(createMessagDto.RecipientUsername);
+            var recipient = await _userRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);
 
             if (recipient == null) return NotFound();
 
@@ -41,7 +41,7 @@ namespace API.Controllers
                 RecipientId = recipient.Id,
                 SenderUsername = sender.UserName,
                 RecipientUsername = recipient.UserName,
-                Content = createMessagDto.Content
+                Content = createMessageDto.Content
             };
             
             _messageRepository.AddMessage(message);
